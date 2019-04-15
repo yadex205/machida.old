@@ -1,0 +1,28 @@
+{
+  "name": "machida",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yadex205/machida.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yadex205/machida/issues"
+  },
+  "homepage": "https://github.com/yadex205/machida#readme",
+  "devDependencies": {
+    "@types/node": "^11.13.4",
+    "@types/webpack": "^4.4.27",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0"
+  }
+}
