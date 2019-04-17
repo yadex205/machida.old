@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { Configuration as WebpackConfiguration } from 'webpack';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -11,6 +12,10 @@ const config: WebpackConfiguration = {
     filename: 'index.js'
   },
   target: 'node',
+  resolve: {
+    plugins: [new TsconfigPathsPlugin()],
+    extensions: ['.ts', '.js']
+  },
   module: {
     rules: [
       {
