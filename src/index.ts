@@ -4,6 +4,7 @@ import glob from 'glob';
 import globParent from 'glob-parent';
 import { mkdirp } from 'fs-extra';
 import { getLogger, configure as configureLog4js } from 'log4js';
+import replaceExt from 'replace-ext';
 import FFmpegInformation from './ffmpeg-information';
 import runTranscodeWorker from './transcode-worker';
 import getConfig from './config';
@@ -37,7 +38,7 @@ const logger = getLogger('main');
     const sources = await promisify(glob)(recipe.src, { nodir: true });
 
     for (let input of sources) {
-      const output = resolve(recipe.dest, relative(sourceBase, input));
+      const output = replaceExt(resolve(recipe.dest, relative(sourceBase, input)), { h264: '.mp4', hap: '.mov' }[recipe.type]);
       await mkdirp(dirname(output));
       tasks.push({ input, output, type: recipe.type });
     }

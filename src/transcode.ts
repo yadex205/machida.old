@@ -60,6 +60,10 @@ export default async function transcode(props: Props) {
       }
       args.outputFormat = ['-f', 'mp4', '-movflags', '+faststart'];
       break;
+    case 'hap':
+      args.outputVideo = ['-c:v', 'hap', '-s', '1280x720'];
+      args.outputFormat = ['-f', 'mov', '-movflags', '+faststart'];
+      break;
   }
 
   if (! inputAudioStream) {
