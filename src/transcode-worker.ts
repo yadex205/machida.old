@@ -32,8 +32,6 @@ export default async function runWorker(props: Props): Promise<void> {
   const { tasks, concurrency } = props;
 
   await Aigle.eachLimit(tasks, concurrency, async (props: TranscodeProps) => {
-    logger.info(`Transcode ${props.input} ==> ${props.output}`);
-
     let inputStats;
     let outputStats;
 
@@ -59,6 +57,7 @@ export default async function runWorker(props: Props): Promise<void> {
       logger.info(`Skip transcode ${props.input} ==> ${props.output}`);
     } else {
       try {
+        logger.info(`Transcode ${props.input} ==> ${props.output}`);
         await transcode(props);
       } catch (error) {
         logger.error(`Failed transcoding ${props.input} => ${props.output}`);
