@@ -1,4 +1,4 @@
-import { spawn, ChildProcess } from 'child_process';
+import { spawn } from 'child_process';
 
 interface FFmpegProgress {
   position: number;
@@ -6,7 +6,9 @@ interface FFmpegProgress {
   status?: string;
 }
 
-type ProgressCallback = (progress: FFmpegProgress) => void;
+interface ProgressCallback {
+  (progress: FFmpegProgress): void;
+}
 
 export default function ffmpeg(args: string[], progressCallback: ProgressCallback = (() => {})): Promise<FFmpegProgress> {
   args = [
@@ -17,7 +19,7 @@ export default function ffmpeg(args: string[], progressCallback: ProgressCallbac
   ];
 
   return new Promise((resolve, reject) => {
-    let isFailed: boolean = false;
+    let isFailed = false;
     let progress: FFmpegProgress = {
       position: 0,
       speed: 0,
