@@ -1,76 +1,50 @@
 import { promisify } from 'util';
-import { open as fopen, close as fclose, fstat } from 'fs';
 import { resolve, dirname, relative } from 'path';
-import { queue } from 'async';
 import glob from 'glob';
 import globParent from 'glob-parent';
 import { mkdirp } from 'fs-extra';
+import { getLogger, configure as configureLog4js } from 'log4js';
 import FFmpegInformation from './ffmpeg-information';
-import transcode, { Props as TranscodeProps } from './transcode';
+import runTranscodeWorker from './transcode-worker';
+import getConfig from './config';
 
-interface Config {
-  transcode: {
-    concurrency: number;
-  };
-  recipes: {
-    src: string;
-    dest: string;
-    type: string;
-  }[];
-}
+configureLog4js({
+  appenders: {
+    stdout: { type: 'stdout' }
+  },
+  categories: {
+    default: { appenders: ['stdout'], level: 'info' }
+  }
+});
 
-(async function(config: Config) {
+const logger = getLogger('main');
+
+(async function() {
+  logger.info('Loading config');
+  const config = await getConfig();
+  if (!config) {
+    return;
+  }
+
+  logger.info('Gathering FFmpeg information');
   const info = FFmpegInformation.getInstance();
   await info.gather();
 
-  const q = queue<TranscodeProps>(async (props) => {
-    let eligibleToTranscode = false;
-
-    const inputFd = await promisify(fopen)(props.input, 'r');
-    const inputStat = await promisify(fstat)(inputFd);
-    await promisify(fclose)(inputFd);
-
-    try {
-      const outputFd = await promisify(fopen)(props.output, 'r');
-      const outputStat = await promisify(fstat)(outputFd);
-      await promisify(fclose)(outputFd);
-      eligibleToTranscode = outputStat.mtime < inputStat.mtime;
-    } catch (error) {
-      eligibleToTranscode = true;
-    }
-
-    try {
-      if (eligibleToTranscode) {
-        await transcode(props);
-      }
-    } catch (error) {
-      console.log(error.toString())
-      console.error(`ERROR: ${props.input} ==> ${props.output}`);
-    }
-  }, config.transcode.concurrency);
-
+  logger.info('Gathering files to be transcoded');
+  const tasks = [];
   for (let recipe of config.recipes) {
     const sourceBase = globParent(recipe.src);
-
-    if (relative(recipe.dest, sourceBase) === '') {
-      console.warn(`Destination directory should be different from source: ${sourceBase}`);
-    }
-
-    if (recipe.type !== 'h264' && recipe.type !== 'hap') {
-      console.warn(`Type ${recipe.type} not supported`);
-    }
-
     const sources = await promisify(glob)(recipe.src, { nodir: true });
 
-    for (let src of sources) {
-      const output = resolve(recipe.dest, relative(sourceBase, src));
+    for (let input of sources) {
+      const output = resolve(recipe.dest, relative(sourceBase, input));
       await mkdirp(dirname(output));
-
-      q.push({
-        input: src,
-        output,
-        type: recipe.type as 'h264' | 'hap'
-      });
+      tasks.push({ input, output, type: recipe.type });
     }
   }
-})(require(resolve('./machida.config.js')));
+
+  logger.info('Start transcoding');
+  await runTranscodeWorker({ tasks, concurrency: config.transcode.concurrency });
+
+  logger.info('Finished!');
+})();

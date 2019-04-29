@@ -3,11 +3,11 @@ import ffmpeg from 'ffmpeg';
 import FFmpegInformation from 'ffmpeg-information';
 
 interface FFmpegCategorizedArgs {
-  inputVideo?: string[],
+  inputVideo?: string[];
   input?: string;
-  outputFormat?: string[],
-  outputVideo?: string[],
-  outputAudio?: string[],
+  outputFormat?: string[];
+  outputVideo?: string[];
+  outputAudio?: string[];
   output?: string;
 }
 
@@ -77,8 +77,6 @@ export default async function transcode(props: Props) {
     ...args.outputAudio || [],
     args.output
   ];
-
-  console.log(validArgs)
 
   const duration = parseFloat(probe.format.duration);
 

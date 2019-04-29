@@ -1,0 +1,12 @@
+{
+  "transcode": {
+    "concurrency": 2
+  },
+  "recipes": [
+    {
+      "src": "/Users/foobar/Movies/original/*.mp4",
+      "dest": "/Users/foobar/Movies/encoded/",
+      "type": "h264"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
 /node_modules
 /npm-*.log
 /dist
-/machida.config.js
+/machida.config.json
