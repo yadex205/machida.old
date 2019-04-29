@@ -1,7 +1,7 @@
 import { promisify } from 'util';
 import { open as fopen, close as fclose, fstat } from 'fs';
-import { resolve, basename, dirname, extname, relative } from 'path';
-import { queue, filterLimit } from 'async';
+import { resolve, dirname, relative } from 'path';
+import { queue } from 'async';
 import glob from 'glob';
 import globParent from 'glob-parent';
 import { mkdirp } from 'fs-extra';
@@ -10,7 +10,7 @@ import transcode, { Props as TranscodeProps } from './transcode';
 
 interface Config {
   transcode: {
-    concurrency: number
+    concurrency: number;
   };
   recipes: {
     src: string;
