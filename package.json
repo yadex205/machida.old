@@ -1,5 +1,5 @@
 {
-  "name": "machida",
+  "name": "@yadex205/machida",
   "version": "1.0.0",
   "description": "Transcoding automata for VJ materials",
   "main": "dist/index.js",
