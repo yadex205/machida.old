@@ -1,6 +1,6 @@
 {
   "name": "machida",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Transcoding automata for VJ materials",
   "main": "dist/index.js",
   "scripts": {
