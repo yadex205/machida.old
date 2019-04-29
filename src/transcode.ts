@@ -78,6 +78,8 @@ export default async function transcode(props: Props) {
     args.output
   ];
 
+  console.log(validArgs)
+
   const duration = parseFloat(probe.format.duration);
 
   await ffmpeg(validArgs, (progress) => {

@@ -1,6 +1,6 @@
 import { promisify } from 'util';
 import { open as fopen, close as fclose, fstat } from 'fs';
-import { resolve, basename, extname, relative } from 'path';
+import { resolve, basename, dirname, extname, relative } from 'path';
 import { queue, filterLimit } from 'async';
 import glob from 'glob';
 import globParent from 'glob-parent';
@@ -39,8 +39,13 @@ interface Config {
       eligibleToTranscode = true;
     }
 
-    if (eligibleToTranscode) {
-      await transcode(props);
+    try {
+      if (eligibleToTranscode) {
+        await transcode(props);
+      }
+    } catch (error) {
+      console.log(error.toString())
+      console.error(`ERROR: ${props.input} ==> ${props.output}`);
     }
   }, config.transcode.concurrency);
 
@@ -59,7 +64,7 @@ interface Config {
 
     for (let src of sources) {
       const output = resolve(recipe.dest, relative(sourceBase, src));
-      await mkdirp(basename(output));
+      await mkdirp(dirname(output));
 
       q.push({
         input: src,
