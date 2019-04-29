@@ -73,15 +73,4 @@ interface Config {
       });
     }
   }
-})({
-  transcode: {
-    concurrency: 2
-  },
-  recipes: [
-    {
-      src: '/Users/canon/Movies/*.mp4',
-      dest: '/Users/canon/Desktop/aiueo',
-      type: 'h264'
-    }
-  ]
-});
+})(require(resolve('./machida.config.js')));

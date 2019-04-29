@@ -1,8 +1,8 @@
 {
   "name": "machida",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Transcoding automata for VJ materials",
+  "main": "dist/index.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "start": "webpack --watch"
