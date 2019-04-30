@@ -25,9 +25,10 @@ export default function ffmpeg(args: string[], progressCallback: ProgressCallbac
       speed: 0,
       status: 'standby'
     };
+    let stderrBuf = '';
 
     const proc = spawn('ffmpeg', args, {
-      stdio: ['ignore', null, 'ignore']
+      stdio: ['ignore', null, null]
     });
 
     if (proc.stdout) {
@@ -47,6 +48,12 @@ export default function ffmpeg(args: string[], progressCallback: ProgressCallbac
       });
     }
 
+    if (proc.stderr) {
+      proc.stderr.on('data', (chunk: string | Buffer) => {
+        stderrBuf += chunk.toString();
+      });
+    }
+
     proc.on('error', error => {
       isFailed = true;
       reject(error);
@@ -55,7 +62,7 @@ export default function ffmpeg(args: string[], progressCallback: ProgressCallbac
     proc.on('exit', code => {
       if (code !== 0) {
         isFailed = true;
-        reject('FFmpeg exit with non-zero status');
+        reject("FFmpeg exit with non-zero status: \n" + stderrBuf);
       }
 
       if (!isFailed) {
