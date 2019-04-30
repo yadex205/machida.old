@@ -49,11 +49,24 @@ export default async function transcode(props: Props) {
         args.inputVideo = ['-hwaccel', 'videotoolbox'];
       }
       break;
+    case 'hevc':
+      if (ffmpegInfo.getDecoders().some(dec => dec.name === 'hevc_cuvid')) {
+        args.inputVideo = ['-c:v', 'hevc_cuvid'];
+      }
+      break;
     case 'mjpeg':
       if (ffmpegInfo.getDecoders().some(dec => dec.name === 'mjpeg_cuvid')) {
         args.inputVideo = ['-c:v', 'mjpeg_cuvid'];
       }
       break;
+    case 'mpeg2video':
+      if (ffmpegInfo.getDecoders().some(dec => dec.name === 'mpeg2_cuvid')) {
+        args.inputVideo = ['-c:v', 'mpeg2_cuvid'];
+      }
+    case 'mpeg4':
+      if (ffmpegInfo.getDecoders().some(dec => dec.name === 'mpeg4_cuvid')) {
+        args.inputVideo = ['-c:v', 'mpeg4_cuvid'];
+      }
   }
 
   switch (props.type) {
