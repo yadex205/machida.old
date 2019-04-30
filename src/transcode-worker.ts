@@ -57,8 +57,12 @@ export default async function runWorker(props: Props): Promise<void> {
       logger.info(`Skip transcode ${props.input} ==> ${props.output}`);
     } else {
       try {
-        logger.info(`Transcode ${props.input} ==> ${props.output}`);
-        await transcode(props);
+        await transcode({
+          ...props,
+          onProgress(progress) {
+            logger.info(`Transcode (${Math.round(progress * 100)}%) ${props.input} ==> ${props.output}`);
+          }
+        });
       } catch (error) {
         logger.error(`Failed transcoding ${props.input} => ${props.output}`);
         logger.error(error.toString());

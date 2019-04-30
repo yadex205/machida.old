@@ -26,7 +26,9 @@ export default function ffmpeg(args: string[], progressCallback: ProgressCallbac
       status: 'standby'
     };
 
-    const proc = spawn('ffmpeg', args);
+    const proc = spawn('ffmpeg', args, {
+      stdio: ['ignore', null, 'ignore']
+    });
 
     if (proc.stdout) {
       proc.stdout.on('data', (chunk: string | Buffer) => {
