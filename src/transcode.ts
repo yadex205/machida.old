@@ -59,7 +59,7 @@ export default async function transcode(props: Props) {
   switch (props.type) {
     case 'h264':
       if (ffmpegInfo.getEncoders().some(dec => dec.name === 'h264_nvenc')) {
-        args.outputVideo = ['-c:v', 'h264_nvenc', '-qp', '30', '-filter:v', 'format=yuv420p,hwupload_cuda,scale_cuda=1280:720'];
+        args.outputVideo = ['-c:v', 'h264_nvenc', '-qp', '30', '-filter:v', 'format=nv12,hwupload_cuda,scale_cuda=1280:720'];
       } else if (ffmpegInfo.getEncoders().some(dec => dec.name === 'h264_videotoolbox')) {
         args.outputVideo = ['-c:v', 'h264_videotoolbox', '-qmin', '30', '-qmax', '30', '-s', '1280x720']
       }
