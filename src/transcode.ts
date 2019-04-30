@@ -49,6 +49,11 @@ export default async function transcode(props: Props) {
         args.inputVideo = ['-hwaccel', 'videotoolbox'];
       }
       break;
+    case 'mjpeg':
+      if (ffmpegInfo.getDecoders().some(dec => dec.name === 'mjpeg_cuvid')) {
+        args.inputVideo = ['-c:v', 'mjpeg_cuvid'];
+      }
+      break;
   }
 
   switch (props.type) {
